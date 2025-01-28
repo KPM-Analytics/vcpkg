@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 b4f7248f89f1cd146dbbae7860a17131cd29bd3cb81db1e678abfcfbf2d8fa4a7633bfd0edbf50afae7b838c8700e8c0d0bb05828139d5cb5662df6bbf3eb92c
+    SHA512 3b6e0da8169449944715de9e66380977791069a1d8288534ec768eaa2fb68533821fd8e06eac925a26656baf42185258b13aa80579e1e9be3ebc18fcea66f24d
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -65,6 +65,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"       WITH_CUBLAS
  "cuda"       WITH_CUDA
  "cuda"       ENABLE_CUDA_FIRST_CLASS_LANGUAGE
+ "cuda"       CUDA_FAST_MATH
  "cudnn"      WITH_CUDNN
  "dc1394"     WITH_1394
  "dnn"        BUILD_opencv_dnn
@@ -96,6 +97,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "fs"         OPENCV_ENABLE_FILESYSTEM_SUPPORT
  "thread"     OPENCV_ENABLE_THREAD_SUPPORT
  "opencl"     WITH_OPENCL
+ # "opencl"     WITH_OPENCL_SVM # I was unable to successfully enable this
  "openvino"   WITH_OPENVINO
  "openexr"    WITH_OPENEXR
  "opengl"     WITH_OPENGL
@@ -105,6 +107,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "python"     BUILD_opencv_python3
  "python"     WITH_PYTHON
  "quality"    BUILD_opencv_quality
+ "qt"         WITH_QT
  "quirc"      WITH_QUIRC
  "rgbd"       BUILD_opencv_rgbd
  "sfm"        BUILD_opencv_sfm
@@ -327,6 +330,13 @@ if("halide" IN_LIST FEATURES)
   )
 endif()
 
+if ("cuda" IN_LIST FEATURES)
+  list(APPEND ADDITIONAL_BUILD_FLAGS "-DCUDA_ARCH_BIN=7.5,8.0,8.6,8.9,9.0")
+  list(APPEND ADDITIONAL_BUILD_FLAGS "-DCUDA_ARCH_PTX=9.0")
+  # list(APPEND ADDITIONAL_BUILD_FLAGS "-DCUDA_GENERATION=Auto")
+  # list(APPEND ADDITIONAL_BUILD_FLAGS "-DCUDA_USE_STATIC_CUDA_RUNTIME=ON")
+endif()
+
 if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
 endif()
@@ -426,6 +436,13 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_OBSENSOR=OFF
+        ###### custom sightline flags
+        -DCPU_BASELINE=AVX2
+        -DENABLE_LTO=ON
+        -DOPENCV_IPP_GAUSSIAN_BLUR=ON # This increase build size by about 8 MB
+        -DOPENCV_IPP_MEAN=ON
+        -DOPENCV_IPP_MINMAX=ON
+        -DOPENCV_IPP_SUM=ON
         ###### modules which require special treatment
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
