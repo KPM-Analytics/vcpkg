@@ -371,7 +371,7 @@ vcpkg_cmake_configure(
         -DX86=${TARGET_IS_X86}
         -DARM=${TARGET_IS_ARM}
         ###### use c++17 to enable features that fail with c++11 (halide, protobuf, etc.)
-        -DCMAKE_CXX_STANDARD=17
+        -DCMAKE_CXX_STANDARD=20
         ###### ocv_options
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOpenCV_INSTALL_BINARIES_PREFIX=
@@ -445,6 +445,7 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_OBSENSOR=OFF
+        -DWITH_LAPACK=OFF
         ###### custom sightline flags
         -DCPU_BASELINE=AVX2
         -DENABLE_LTO=ON
@@ -452,7 +453,7 @@ vcpkg_cmake_configure(
         -DOPENCV_IPP_MEAN=ON
         -DOPENCV_IPP_MINMAX=ON
         -DOPENCV_IPP_SUM=ON
-        -DWITH_LAPACK=OFF
+        -DENABLE_FAST_MATH=ON
         ###### modules which require special treatment
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
