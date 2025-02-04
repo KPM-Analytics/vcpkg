@@ -1,7 +1,6 @@
 {
   "name": "opencv4",
   "version": "4.11.0",
-  "port-version": 0,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -21,7 +20,44 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "calib3d",
+    {
+      "name": "directml",
+      "platform": "windows & !uwp & !mingw"
+    },
+    {
+      "name": "dnn",
+      "platform": "!android"
+    },
+    {
+      "name": "dshow",
+      "platform": "windows & !uwp"
+    },
+    "fs",
+    {
+      "name": "gapi",
+      "platform": "!uwp"
+    },
+    {
+      "name": "gtk",
+      "platform": "linux"
+    },
+    "highgui",
+    "intrinsics",
+    "jpeg",
+    {
+      "name": "msmf",
+      "platform": "windows & !uwp & !mingw"
+    },
+    "png",
+    "quirc",
+    "thread",
+    "tiff",
+    "webp",
+    {
+      "name": "win32ui",
+      "platform": "windows & !uwp"
+    }
   ],
   "features": {
     "ade": {
@@ -88,59 +124,9 @@
         "libdc1394"
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "calib3d",
-            "fs",
-            "highgui",
-            "intrinsics",
-            "jpeg",
-            "png",
-            "quirc",
-            "thread",
-            "tiff",
-            "webp"
-          ]
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "gtk"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "gapi"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "dnn"
-          ],
-          "platform": "!android"
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "dshow",
-            "win32ui"
-          ],
-          "platform": "windows & !uwp"
-        }
-      ]
+    "directml": {
+      "description": "Build with DirectML support",
+      "supports": "windows & !uwp & !mingw"
     },
     "dnn": {
       "description": "Enable dnn module",
@@ -278,11 +264,10 @@
         "libjpeg-turbo"
       ]
     },
-    "lapack": {
-      "description": "LAPACK support for opencv",
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
       "dependencies": [
-        "blas",
-        "lapack"
+        "libjxl"
       ]
     },
     "msmf": {
@@ -449,6 +434,12 @@
             "eigen"
           ]
         }
+      ]
+    },
+    "spng": {
+      "description": "Enable libspng integration",
+      "dependencies": [
+        "libspng"
       ]
     },
     "tbb": {
